@@ -209,7 +209,10 @@ class Proxy:
     def set_property(self, name, value):
         """Update a property on that proxy"""
         # convert any invalid indirect value (proxy)
-        prop_type = self.definition.get(name).get("type", "string")
+        definition = self.definition.get(name, None)
+        if definition is None:
+            raise KeyError(f"'{self._name}' has no definition with name '{name}'")
+        prop_type = definition.get("type", "string")
         safe_value = value
         if value is not None:
             if prop_type == "proxy" and not isinstance(value, str):
